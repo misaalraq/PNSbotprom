@@ -24,7 +24,7 @@
     "axios": "^1.6.0",
     "chalk": "^5.4.1",
     "ethers": "^6.14.4",
-    "ethersjs3-wallet": "^3.0.10",
+    "ethersjs3-wallet": "^3.0.11",
     "p-limit": "^6.2.0"
   }
 }
