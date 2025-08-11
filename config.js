@@ -7,6 +7,6 @@ module.exports = {
   DATA: [],
   REVERSE_RECORD: true,
   OWNER_CONTROLLED_FUSES: 0,
-  REG_PER_KEY: 1, // Number of registrations per private key
+  REG_PER_KEY: 100, // Number of registrations per private key
   MAX_CONCURRENCY: 10 // Maximum number of streams
 }; 
