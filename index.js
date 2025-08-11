@@ -31,6 +31,10 @@ function randomName(length = 9) {
   return result;
 }
 
+async function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function registerDomain(PRIVATE_KEY, index, regIndex, chalk) {
   const MAX_RETRY = 5;
   let retry = 0;
@@ -66,7 +70,7 @@ async function registerDomain(PRIVATE_KEY, index, regIndex, chalk) {
 
       // 3. Tunggu minCommitmentAge (default 60 detik)
       console.log(chalk.yellow(`[Wallet ${index + 1} | Pendaftaran ${regIndex}] Menunggu 60 detik sebelum melanjutkan...`));
-      await new Promise(r => setTimeout(r, 60000));
+      await delay(60000);
 
       // 4. Cek harga
       const price = await controller.rentPrice(NAME, DURATION);
@@ -87,6 +91,7 @@ async function registerDomain(PRIVATE_KEY, index, regIndex, chalk) {
       );
       await tx.wait();
       console.log(chalk.green(`[Wallet ${index + 1} | Pendaftaran ${regIndex}] ✅ Pendaftaran domain berhasil!`));
+
       break;
     } catch (err) {
       retry++;
@@ -95,7 +100,7 @@ async function registerDomain(PRIVATE_KEY, index, regIndex, chalk) {
 
       if (retry < MAX_RETRY) {
         console.log(chalk.yellow(`[Wallet ${index + 1} | Pendaftaran ${regIndex}] Gagal: ${msg} - coba lagi (${retry}/${MAX_RETRY}) setelah 60 detik...`));
-        await new Promise(r => setTimeout(r, 60000));
+        await delay(60000);
       } else {
         console.error(chalk.red(`[Wallet ${index + 1} | Pendaftaran ${regIndex}] ❌ Gagal setelah ${MAX_RETRY} percobaan: ${msg}`));
       }
@@ -120,6 +125,12 @@ async function main() {
     tasks.push(limit(async () => {
       for (let i = 0; i < REG_PER_KEY; i++) {
         await registerDomain(pk, idx, i + 1, chalk);
+
+        // Tambahkan jeda 5 detik sebelum pendaftaran domain berikutnya
+        if (i < REG_PER_KEY - 1) {
+          console.log(`⏳ Menunggu 5 detik sebelum pendaftaran domain berikutnya...`);
+          await delay(5000);
+        }
       }
     }));
   });
